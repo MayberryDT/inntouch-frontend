@@ -30,13 +30,14 @@ jobs:
         run: npm run build
         env:
           CI: true
-          REACT_APP_API_URL: ${{ secrets.REACT_APP_API_URL }}
-          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
-          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
-          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
-          REACT_APP_FIREBASE_STORAGE_BUCKET: ${{ secrets.REACT_APP_FIREBASE_STORAGE_BUCKET }}
-          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.REACT_APP_FIREBASE_MESSAGING_SENDER_ID }}
-          REACT_APP_FIREBASE_APP_ID: ${{ secrets.REACT_APP_FIREBASE_APP_ID }}
+          REACT_APP_API_URL: "https://inntouch-backend.netlify.app"
+          REACT_APP_FIREBASE_API_KEY: "AIzaSyD9LUmmp6rw09lRqAdzA8s7w-aqyKm3Qgg"
+          REACT_APP_FIREBASE_AUTH_DOMAIN: "inntouch-app.firebaseapp.com"
+          REACT_APP_FIREBASE_PROJECT_ID: "inntouch-app"
+          REACT_APP_FIREBASE_STORAGE_BUCKET: "inntouch-app.firebasestorage.app"
+          REACT_APP_FIREBASE_MESSAGING_SENDER_ID: "634288261537"
+          REACT_APP_FIREBASE_APP_ID: "1:634288261537:web:46d46cefcdb23d54bea3e0"
+          REACT_APP_FIREBASE_MEASUREMENT_ID: "G-5KDE2P8NLH"
 
       - name: Deploy to Netlify
         uses: nwtgck/actions-netlify@v2.0
@@ -50,5 +51,5 @@ jobs:
           overwrites-pull-request-comment: true
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: "5a9f54b7-1fcc-40d8-95c1-f6082cfb24dc"
         timeout-minutes: 5 
