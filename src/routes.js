@@ -8,8 +8,10 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
-import Key from './pages/Key';
 import ResetPassword from './pages/ResetPassword';
+import Chat from './pages/Chat';
+import Attractions from './pages/Attractions';
+import RoomService from './pages/RoomService';
 import AccessLog from './pages/AccessLog';
 import Reservations from './pages/Reservations';
 
@@ -32,22 +34,33 @@ const AppRoutes = () => {
       />
       
       <Route 
-        path="/key" 
+        path="/chat" 
         element={
           <ProtectedRoute>
             <Layout>
-              <Key />
+              <Chat />
             </Layout>
           </ProtectedRoute>
         } 
       />
       
       <Route 
-        path="/profile" 
+        path="/attractions" 
         element={
           <ProtectedRoute>
             <Layout>
-              <Profile />
+              <Attractions />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+      
+      <Route 
+        path="/room-service" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <RoomService />
             </Layout>
           </ProtectedRoute>
         } 

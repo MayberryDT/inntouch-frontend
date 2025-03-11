@@ -24,6 +24,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import KeyIcon from '@mui/icons-material/Key';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import RoomServiceIcon from '@mui/icons-material/RoomService';
+import ChatIcon from '@mui/icons-material/Chat';
+import ExploreIcon from '@mui/icons-material/Explore';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { useAuth } from '../../contexts';
 import { useNavigation } from '../../hooks';
 
@@ -64,8 +68,10 @@ const Header = () => {
   
   const menuItems = [
     { text: 'Home', icon: <HomeIcon />, path: '/' },
-    { text: 'Digital Keys', icon: <KeyIcon />, path: '/key' },
-    { text: 'Profile', icon: <PersonIcon />, path: '/profile' },
+    { text: 'Room Service', icon: <RoomServiceIcon />, path: '/room-service' },
+    { text: 'Chat', icon: <ChatIcon />, path: '/chat' },
+    { text: 'Attractions', icon: <ExploreIcon />, path: '/attractions' },
+    { text: 'Profile', icon: <AccountCircleIcon />, path: '/profile' }
   ];
   
   const drawer = (

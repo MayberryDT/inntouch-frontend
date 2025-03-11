@@ -14,6 +14,10 @@ import {
 import KeyIcon from '@mui/icons-material/Key';
 import SecurityIcon from '@mui/icons-material/Security';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
+import HotelIcon from '@mui/icons-material/Hotel';
+import RoomServiceIcon from '@mui/icons-material/RoomService';
+import ChatIcon from '@mui/icons-material/Chat';
+import ExploreIcon from '@mui/icons-material/Explore';
 
 const FeatureCard = ({ icon, title, description, buttonText, buttonLink }) => (
   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -45,25 +49,24 @@ const FeatureCard = ({ icon, title, description, buttonText, buttonLink }) => (
 const Home = () => {
   const features = [
     {
-      icon: <KeyIcon sx={{ fontSize: 60, color: 'primary.main' }} />,
-      title: 'Digital Keys',
-      description: 'Access your room with a digital key on your smartphone. No more physical keys to lose or forget.',
-      buttonText: 'Manage Keys',
-      buttonLink: '/key'
+      title: 'Digital Check-in',
+      description: 'Skip the front desk and check in directly from your phone. Fast, convenient, and contactless.',
+      icon: <HotelIcon />
     },
     {
-      icon: <SecurityIcon sx={{ fontSize: 60, color: 'primary.main' }} />,
-      title: 'Secure Access',
-      description: 'State-of-the-art security ensures only authorized users can access your room.',
-      buttonText: 'Learn More',
-      buttonLink: '/key'
+      title: 'Room Service',
+      description: 'Order food and amenities directly to your room. Track your order in real-time.',
+      icon: <RoomServiceIcon />
     },
     {
-      icon: <PhoneIphoneIcon sx={{ fontSize: 60, color: 'primary.main' }} />,
-      title: 'Mobile Control',
-      description: 'Manage your stay, access your room, and control your experience all from your smartphone.',
-      buttonText: 'View Profile',
-      buttonLink: '/profile'
+      title: 'Chat Support',
+      description: 'Get instant help from our staff or AI concierge. Available 24/7 for all your needs.',
+      icon: <ChatIcon />
+    },
+    {
+      title: 'Local Attractions',
+      description: 'Discover and book local experiences. Get personalized recommendations and exclusive deals.',
+      icon: <ExploreIcon />
     }
   ];
 
@@ -81,8 +84,7 @@ const Home = () => {
             Welcome to InnTouch
           </Typography>
           <Typography variant="h5" align="center" color="text.secondary" paragraph>
-            The smart way to access and manage your hotel room. 
-            Experience the convenience of digital keys and seamless mobile control.
+            Experience modern hospitality with our comprehensive digital services.
           </Typography>
           <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
             <Button variant="contained" component={RouterLink} to="/key" sx={{ mx: 1 }}>
@@ -96,13 +98,27 @@ const Home = () => {
       </Box>
       
       <Container sx={{ py: 8 }} maxWidth="md">
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid item key={index} xs={12} sm={6} md={4}>
-              <FeatureCard {...feature} />
-            </Grid>
-          ))}
-        </Grid>
+        <Box sx={{ my: 4 }}>
+          <Grid container spacing={3}>
+            {features.map((feature, index) => (
+              <Grid item xs={12} sm={6} md={3} key={index}>
+                <Card sx={{ height: '100%' }}>
+                  <CardContent>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+                      {feature.icon}
+                    </Box>
+                    <Typography variant="h6" component="h2" gutterBottom>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {feature.description}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
       </Container>
       
       <Container maxWidth="md" sx={{ mt: 4 }}>
