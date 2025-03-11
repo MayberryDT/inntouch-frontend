@@ -30,7 +30,7 @@ import { useNavigation } from '../../hooks';
 const Header = () => {
   const theme = useTheme();
   const { isAuthenticated, user, logout } = useAuth();
-  const { goToLogin, goToHome } = useNavigation();
+  const { goToLogin } = useNavigation();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   
   // Mobile drawer state
