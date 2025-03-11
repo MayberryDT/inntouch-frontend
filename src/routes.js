@@ -6,11 +6,9 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 // Import page components
 import Home from './pages/Home';
 import Login from './pages/Login';
+import Register from './pages/Register';
+import Profile from './pages/Profile';
 import Key from './pages/Key';
-
-// This is a placeholder for future page components
-const Register = () => <div>Register Page</div>;
-const Profile = () => <div>Profile Page</div>;
 
 const AppRoutes = () => {
   return (

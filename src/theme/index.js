@@ -61,39 +61,12 @@ const theme = createTheme({
     button: {
       textTransform: 'uppercase',
       fontWeight: 500,
-      fontSize: '14px',
     },
   },
   shape: {
     borderRadius: 4,
   },
   spacing: 8, // Base spacing unit of 8px
-  components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          height: 40,
-          padding: '8px 16px',
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          marginBottom: 16,
-        },
-      },
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-          padding: 16,
-          margin: 8,
-        },
-      },
-    },
-  },
 });
 
 export default theme; 
