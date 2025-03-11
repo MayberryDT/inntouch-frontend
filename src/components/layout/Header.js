@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -24,14 +24,14 @@ import HomeIcon from '@mui/icons-material/Home';
 import KeyIcon from '@mui/icons-material/Key';
 import PersonIcon from '@mui/icons-material/Person';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { useAuth } from '../../contexts';
+import { useNavigation } from '../../hooks';
 
 const Header = () => {
   const theme = useTheme();
-  const navigate = useNavigate();
+  const { isAuthenticated, user, logout } = useAuth();
+  const { goToLogin, goToHome } = useNavigation();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  
-  // Mock authentication state - in a real app, this would come from a context or state management
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
   // Mobile drawer state
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -53,14 +53,13 @@ const Header = () => {
   };
   
   const handleLogout = () => {
-    // Mock logout - in a real app, this would call an auth service
-    setIsAuthenticated(false);
+    logout();
     handleProfileMenuClose();
-    navigate('/login');
+    goToLogin();
   };
   
   const handleLogin = () => {
-    navigate('/login');
+    goToLogin();
   };
   
   const menuItems = [
@@ -148,7 +147,7 @@ const Header = () => {
                 aria-expanded={open ? 'true' : undefined}
               >
                 <Avatar sx={{ width: 32, height: 32, bgcolor: theme.palette.secondary.main }}>
-                  <PersonIcon />
+                  {user?.name ? user.name.charAt(0) : <PersonIcon />}
                 </Avatar>
               </IconButton>
               <Menu
