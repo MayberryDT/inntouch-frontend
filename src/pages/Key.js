@@ -25,7 +25,6 @@ import LockOpenIcon from '@mui/icons-material/LockOpen';
 import LockIcon from '@mui/icons-material/Lock';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import HistoryIcon from '@mui/icons-material/History';
-import Layout from '../components/layout/Layout';
 
 // Mock data for digital keys
 const mockKeys = [
@@ -297,109 +296,107 @@ const Key = () => {
   };
 
   return (
-    <Layout>
-      <Container maxWidth="md">
-        <Box sx={{ mb: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Digital Keys
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Manage your digital keys and view access history
-          </Typography>
+    <Container maxWidth="md">
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Digital Keys
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Manage your digital keys and view access history
+        </Typography>
+      </Box>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          {error}
+        </Alert>
+      )}
+
+      {success && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          {success}
+        </Alert>
+      )}
+
+      <Paper sx={{ width: '100%', mb: 4 }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs 
+            value={tabValue} 
+            onChange={handleTabChange} 
+            aria-label="key management tabs"
+            variant="fullWidth"
+          >
+            <Tab 
+              label="My Keys" 
+              id="key-tab-0" 
+              aria-controls="key-tabpanel-0" 
+              icon={<KeyIcon />} 
+              iconPosition="start"
+            />
+            <Tab 
+              label="Access Log" 
+              id="key-tab-1" 
+              aria-controls="key-tabpanel-1" 
+              icon={<HistoryIcon />} 
+              iconPosition="start"
+            />
+          </Tabs>
         </Box>
-
-        {error && (
-          <Alert severity="error" sx={{ mb: 3 }}>
-            {error}
-          </Alert>
-        )}
-
-        {success && (
-          <Alert severity="success" sx={{ mb: 3 }}>
-            {success}
-          </Alert>
-        )}
-
-        <Paper sx={{ width: '100%', mb: 4 }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <Tabs 
-              value={tabValue} 
-              onChange={handleTabChange} 
-              aria-label="key management tabs"
-              variant="fullWidth"
-            >
-              <Tab 
-                label="My Keys" 
-                id="key-tab-0" 
-                aria-controls="key-tabpanel-0" 
-                icon={<KeyIcon />} 
-                iconPosition="start"
-              />
-              <Tab 
-                label="Access Log" 
-                id="key-tab-1" 
-                aria-controls="key-tabpanel-1" 
-                icon={<HistoryIcon />} 
-                iconPosition="start"
-              />
-            </Tabs>
-          </Box>
-          
-          <TabPanel value={tabValue} index={0}>
-            {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                <CircularProgress />
-              </Box>
-            ) : keys.length > 0 ? (
-              keys.map(key => (
-                <KeyCard 
-                  key={key.id} 
-                  keyData={key} 
-                  onActivate={handleActivateKey} 
-                  onDeactivate={handleDeactivateKey}
-                  loading={actionLoading}
-                />
-              ))
-            ) : (
-              <Box sx={{ p: 4, textAlign: 'center' }}>
-                <Typography variant="body1" color="text.secondary">
-                  You don't have any digital keys yet.
-                </Typography>
-              </Box>
-            )}
-          </TabPanel>
-          
-          <TabPanel value={tabValue} index={1}>
-            {loading ? (
-              <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
-                <CircularProgress />
-              </Box>
-            ) : accessLog.length > 0 ? (
-              <List>
-                {accessLog.map(log => (
-                  <AccessLogItem key={log.id} log={log} />
-                ))}
-              </List>
-            ) : (
-              <Box sx={{ p: 4, textAlign: 'center' }}>
-                <Typography variant="body1" color="text.secondary">
-                  No access history available.
-                </Typography>
-              </Box>
-            )}
-          </TabPanel>
-        </Paper>
         
-        <Box sx={{ mt: 4, textAlign: 'center' }}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Need help with your digital key?
-          </Typography>
-          <Button variant="outlined" startIcon={<AccessTimeIcon />}>
-            Contact Support
-          </Button>
-        </Box>
-      </Container>
-    </Layout>
+        <TabPanel value={tabValue} index={0}>
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : keys.length > 0 ? (
+            keys.map(key => (
+              <KeyCard 
+                key={key.id} 
+                keyData={key} 
+                onActivate={handleActivateKey} 
+                onDeactivate={handleDeactivateKey}
+                loading={actionLoading}
+              />
+            ))
+          ) : (
+            <Box sx={{ p: 4, textAlign: 'center' }}>
+              <Typography variant="body1" color="text.secondary">
+                You don't have any digital keys yet.
+              </Typography>
+            </Box>
+          )}
+        </TabPanel>
+        
+        <TabPanel value={tabValue} index={1}>
+          {loading ? (
+            <Box sx={{ display: 'flex', justifyContent: 'center', p: 4 }}>
+              <CircularProgress />
+            </Box>
+          ) : accessLog.length > 0 ? (
+            <List>
+              {accessLog.map(log => (
+                <AccessLogItem key={log.id} log={log} />
+              ))}
+            </List>
+          ) : (
+            <Box sx={{ p: 4, textAlign: 'center' }}>
+              <Typography variant="body1" color="text.secondary">
+                No access history available.
+              </Typography>
+            </Box>
+          )}
+        </TabPanel>
+      </Paper>
+      
+      <Box sx={{ mt: 4, textAlign: 'center' }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          Need help with your digital key?
+        </Typography>
+        <Button variant="outlined" startIcon={<AccessTimeIcon />}>
+          Contact Support
+        </Button>
+      </Box>
+    </Container>
   );
 };
 

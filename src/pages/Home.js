@@ -14,7 +14,6 @@ import {
 import KeyIcon from '@mui/icons-material/Key';
 import SecurityIcon from '@mui/icons-material/Security';
 import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone';
-import Layout from '../components/layout/Layout';
 
 const FeatureCard = ({ icon, title, description, buttonText, buttonLink }) => (
   <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -69,7 +68,7 @@ const Home = () => {
   ];
 
   return (
-    <Layout>
+    <>
       <Box sx={{ pt: 8, pb: 6 }}>
         <Container maxWidth="sm">
           <Typography
@@ -137,7 +136,7 @@ const Home = () => {
           </Box>
         </Paper>
       </Container>
-    </Layout>
+    </>
   );
 };
 
