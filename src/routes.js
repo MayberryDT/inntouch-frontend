@@ -9,6 +9,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import Key from './pages/Key';
+import ResetPassword from './pages/ResetPassword';
+import AccessLog from './pages/AccessLog';
+import Reservations from './pages/Reservations';
 
 const AppRoutes = () => {
   return (
@@ -16,6 +19,7 @@ const AppRoutes = () => {
       {/* Public routes */}
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+      <Route path="/reset-password" element={<ResetPassword />} />
       
       {/* Protected routes wrapped in Layout */}
       <Route 
@@ -44,6 +48,28 @@ const AppRoutes = () => {
           <ProtectedRoute>
             <Layout>
               <Profile />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+
+      <Route 
+        path="/access-log" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <AccessLog />
+            </Layout>
+          </ProtectedRoute>
+        } 
+      />
+
+      <Route 
+        path="/reservations" 
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Reservations />
             </Layout>
           </ProtectedRoute>
         } 
