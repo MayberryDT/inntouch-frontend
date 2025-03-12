@@ -4,7 +4,7 @@
   base = ""  # Explicitly set to root
   
 [build.environment]
-  NODE_VERSION = "16"
+  NODE_VERSION = "18"
   
 # Production context: all deploys from the Production branch set in your site's 
 # deploy contexts will inherit these settings.
