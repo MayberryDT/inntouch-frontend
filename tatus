@@ -1,0 +1,5 @@
+[33m7c17841b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m Add missing index.js file for React entry point
+[33m729cd446[m Update netlify.toml to explicitly set base directory to root
+[33md2649308[m Restore root directory files for Netlify build
+[33m616d5957[m[33m ([m[1;31morigin/fix-app-js-encoding[m[33m, [m[1;32mfix-app-js-encoding[m[33m)[m fix: recreate App.js with proper UTF-8 encoding to resolve build failure and add .editorconfig
+[33mc2e33127[m Update frontend with authentication components

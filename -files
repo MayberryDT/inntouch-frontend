@@ -1,0 +1,5 @@
+[33mcommit 616d59573e13daee653e7ce79d3c4be3cb649ddd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/fix-app-js-encoding[m[33m, [m[1;32mfix-app-js-encoding[m[33m)[m
+Author: Your Name <your.email@example.com>
+Date:   Tue Mar 11 19:41:33 2025 -0500
+
+    fix: recreate App.js with proper UTF-8 encoding to resolve build failure and add .editorconfig
