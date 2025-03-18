@@ -51,4 +51,7 @@ yarn-error.log*
 
 # Optional: package-lock.json or yarn.lock (uncomment if you want to ignore these)
 # package-lock.json
-# yarn.lock 
+# yarn.lock
+
+# SpecStory directory
+.specstory/ 
