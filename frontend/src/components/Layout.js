@@ -12,7 +12,8 @@ import {
   ListItem,
   ListItemIcon,
   ListItemText,
-  Divider
+  Divider,
+  MenuItem
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -22,7 +23,8 @@ import {
   Restaurant as RestaurantIcon,
   Spa as SpaIcon,
   Chat as ChatIcon,
-  BarChart as AnalyticsIcon
+  BarChart as AnalyticsIcon,
+  BugReport as BugReportIcon
 } from '@mui/icons-material';
 import AuthContext from '../context/AuthContext';
 
@@ -134,6 +136,12 @@ const Layout = () => {
                 <AnalyticsIcon />
               </ListItemIcon>
               <ListItemText primary="Analytics" />
+            </ListItem>
+            <ListItem button component="a" href="http://localhost:3000/" target="_blank">
+              <ListItemIcon>
+                <BugReportIcon />
+              </ListItemIcon>
+              <ListItemText primary="API Tester" />
             </ListItem>
           </List>
           <Divider />

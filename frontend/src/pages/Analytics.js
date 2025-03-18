@@ -29,73 +29,128 @@ import {
   Cell
 } from 'recharts';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import axios from 'axios';
 
-// Mock data for charts
-const occupancyData = [
-  { name: 'Mon', rate: 75 },
-  { name: 'Tue', rate: 82 },
-  { name: 'Wed', rate: 95 },
-  { name: 'Thu', rate: 88 },
-  { name: 'Fri', rate: 92 },
-  { name: 'Sat', rate: 97 },
-  { name: 'Sun', rate: 86 }
+// Mock data for charts (fallback if API fails)
+const responseTimeData = [
+  { day: 'Mon', time: 2.8 },
+  { day: 'Tue', time: 2.5 },
+  { day: 'Wed', time: 3.2 },
+  { day: 'Thu', time: 3.5 },
+  { day: 'Fri', time: 4.1 },
+  { day: 'Sat', time: 5.2 },
+  { day: 'Sun', time: 4.3 }
 ];
 
-const revenueData = [
-  { name: 'Jan', revenue: 24500 },
-  { name: 'Feb', revenue: 18200 },
-  { name: 'Mar', revenue: 32100 },
-  { name: 'Apr', revenue: 28400 },
-  { name: 'May', revenue: 39800 },
-  { name: 'Jun', revenue: 46200 },
-  { name: 'Jul', revenue: 52100 }
+const satisfactionTrendData = [
+  { month: 'Jan', score: 85 },
+  { month: 'Feb', score: 87 },
+  { month: 'Mar', score: 86 },
+  { month: 'Apr', score: 89 },
+  { month: 'May', score: 91 },
+  { month: 'Jun', score: 92 }
 ];
 
-const roomTypeData = [
-  { name: 'Standard', value: 45 },
-  { name: 'Deluxe', value: 30 },
-  { name: 'Suite', value: 15 },
-  { name: 'Executive', value: 10 }
+const interactionChannelData = [
+  { channel: 'In-App Chat', count: 486 },
+  { channel: 'SMS', count: 210 },
+  { channel: 'Phone', count: 95 },
+  { channel: 'Front Desk', count: 51 }
 ];
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
-const bookingSourceData = [
-  { name: 'Website', value: 40 },
-  { name: 'OTAs', value: 35 },
-  { name: 'Direct', value: 15 },
-  { name: 'Other', value: 10 }
+const requestCategoryData = [
+  { category: 'Room Service', count: 127 },
+  { category: 'Housekeeping', count: 86 },
+  { category: 'Concierge', count: 74 },
+  { category: 'Maintenance', count: 48 },
+  { category: 'Amenities', count: 33 }
 ];
+
+// Configure axios
+axios.defaults.baseURL = 'http://localhost:3000';
 
 const Analytics = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [dataSource, setDataSource] = useState('Loading...');
   const [stats, setStats] = useState({
-    totalGuests: 0,
-    occupancyRate: 0,
-    avgStay: 0,
-    revenue: 0
+    totalInteractions: 0,
+    responseTime: 0,
+    satisfactionScore: 0,
+    totalRequests: 0
+  });
+  const [chartData, setChartData] = useState({
+    responseTimeByDay: responseTimeData,
+    satisfactionTrend: satisfactionTrendData,
+    interactionChannels: interactionChannelData,
+    requestCategories: requestCategoryData
   });
 
   useEffect(() => {
-    // Simulate loading data
     const fetchData = async () => {
       try {
-        // In a real app, you would fetch data from your API
+        // Try to fetch from API first
+        try {
+          // Get overview stats
+          const overviewResponse = await axios.get('/api/analytics/overview');
+          
+          if (overviewResponse.data && overviewResponse.data.success) {
+            setStats({
+              totalInteractions: overviewResponse.data.data.totalGuestInteractions || 0,
+              responseTime: overviewResponse.data.data.avgResponseTime || 0,
+              satisfactionScore: overviewResponse.data.data.guestSatisfactionScore || 0,
+              totalRequests: overviewResponse.data.data.totalRequests || 0
+            });
+            
+            // Get chart data
+            const [interactionsRes, requestsRes, responseTimeRes, satisfactionRes] = await Promise.all([
+              axios.get('/api/analytics/interactions/channels'),
+              axios.get('/api/analytics/requests/categories'),
+              axios.get('/api/analytics/response-time/daily'),
+              axios.get('/api/analytics/satisfaction/trend')
+            ]);
+            
+            setChartData({
+              interactionChannels: interactionsRes.data.data || interactionChannelData,
+              requestCategories: requestsRes.data.data || requestCategoryData,
+              responseTimeByDay: responseTimeRes.data.data || responseTimeData,
+              satisfactionTrend: satisfactionRes.data.data || satisfactionTrendData
+            });
+            
+            setDataSource('REAL API DATA');
+            setLoading(false);
+            return;
+          }
+        } catch (apiError) {
+          console.error('API fetch failed, falling back to mock data:', apiError);
+        }
+        
+        // If API fetch fails, fallback to mock data
         await new Promise(resolve => setTimeout(resolve, 1000));
         
         setStats({
-          totalGuests: 843,
-          occupancyRate: 82,
-          avgStay: 3.2,
-          revenue: 267500
+          totalInteractions: 842,
+          responseTime: 3.5,
+          satisfactionScore: 92,
+          totalRequests: 368
         });
         
+        setChartData({
+          responseTimeByDay: responseTimeData,
+          satisfactionTrend: satisfactionTrendData,
+          interactionChannels: interactionChannelData,
+          requestCategories: requestCategoryData
+        });
+        
+        setDataSource('MOCK DATA');
         setLoading(false);
       } catch (err) {
         console.error('Error fetching analytics data:', err);
         setError('Unable to load analytics data. Please try again later.');
+        setDataSource('ERROR');
         setLoading(false);
       }
     };
@@ -132,25 +187,41 @@ const Analytics = () => {
     <Container>
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom>
-          Analytics Dashboard
+          Guest Experience Analytics
         </Typography>
+        
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+          <Typography 
+            variant="subtitle1" 
+            sx={{ 
+              bgcolor: dataSource === 'REAL API DATA' ? 'success.main' : 'warning.main',
+              color: 'white',
+              px: 2,
+              py: 0.5,
+              borderRadius: 1,
+              fontWeight: 'bold'
+            }}
+          >
+            {dataSource}
+          </Typography>
+        </Box>
         
         <Paper elevation={1} sx={{ p: 3, mb: 4, bgcolor: '#f5f5f5' }}>
           <Typography variant="h6" gutterBottom>
-            Hotel Performance Overview
+            Guest Experience Overview
           </Typography>
           <Grid container spacing={3}>
             <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom>
-                    Total Guests
+                    Total Interactions
                   </Typography>
                   <Typography variant="h4">
-                    {stats.totalGuests}
+                    {stats.totalInteractions}
                   </Typography>
                   <Typography variant="body2" color="success.main">
-                    +12% from last month
+                    +16% from last month
                   </Typography>
                 </CardContent>
               </Card>
@@ -159,13 +230,13 @@ const Analytics = () => {
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom>
-                    Occupancy Rate
+                    Avg. Response Time
                   </Typography>
                   <Typography variant="h4">
-                    {stats.occupancyRate}%
+                    {stats.responseTime} min
                   </Typography>
                   <Typography variant="body2" color="success.main">
-                    +5% from last month
+                    -0.3 min from last month
                   </Typography>
                 </CardContent>
               </Card>
@@ -174,13 +245,13 @@ const Analytics = () => {
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom>
-                    Average Stay
+                    Satisfaction Score
                   </Typography>
                   <Typography variant="h4">
-                    {stats.avgStay} days
+                    {stats.satisfactionScore}%
                   </Typography>
-                  <Typography variant="body2" color="info.main">
-                    -0.2 days from last month
+                  <Typography variant="body2" color="success.main">
+                    +2% from last month
                   </Typography>
                 </CardContent>
               </Card>
@@ -189,10 +260,10 @@ const Analytics = () => {
               <Card sx={{ height: '100%' }}>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom>
-                    Total Revenue
+                    Total Requests
                   </Typography>
                   <Typography variant="h4">
-                    ${stats.revenue.toLocaleString()}
+                    {stats.totalRequests}
                   </Typography>
                   <Typography variant="body2" color="success.main">
                     +8% from last month
@@ -207,20 +278,20 @@ const Analytics = () => {
           <Grid item xs={12} md={6}>
             <Paper elevation={2} sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
-                Weekly Occupancy Rate
+                Response Time by Day
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart
-                  data={occupancyData}
+                  data={chartData.responseTimeByDay}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
+                  <XAxis dataKey="day" />
                   <YAxis />
-                  <Tooltip />
+                  <Tooltip formatter={(value) => [`${value} min`, 'Response Time']} />
                   <Legend />
-                  <Bar dataKey="rate" name="Occupancy Rate (%)" fill="#1976d2" />
+                  <Bar dataKey="time" name="Response Time (min)" fill="#1976d2" />
                 </BarChart>
               </ResponsiveContainer>
             </Paper>
@@ -229,20 +300,20 @@ const Analytics = () => {
           <Grid item xs={12} md={6}>
             <Paper elevation={2} sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
-                Monthly Revenue
+                Guest Satisfaction Trend
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart
-                  data={revenueData}
+                  data={chartData.satisfactionTrend}
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip formatter={(value) => [`$${value}`, 'Revenue']} />
+                  <XAxis dataKey="month" />
+                  <YAxis domain={[80, 100]} />
+                  <Tooltip formatter={(value) => [`${value}%`, 'Satisfaction']} />
                   <Legend />
-                  <Line type="monotone" dataKey="revenue" name="Revenue ($)" stroke="#8884d8" activeDot={{ r: 8 }} />
+                  <Line type="monotone" dataKey="score" name="Satisfaction Score (%)" stroke="#8884d8" activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
             </Paper>
@@ -251,26 +322,27 @@ const Analytics = () => {
           <Grid item xs={12} md={6}>
             <Paper elevation={2} sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
-                Room Type Distribution
+                Interaction Channels
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={roomTypeData}
+                    data={chartData.interactionChannels}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    label={({ channel, percent }) => `${channel}: ${(percent * 100).toFixed(0)}%`}
                     outerRadius={100}
                     fill="#8884d8"
-                    dataKey="value"
+                    dataKey="count"
+                    nameKey="channel"
                   >
-                    {roomTypeData.map((entry, index) => (
+                    {chartData.interactionChannels.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                  <Tooltip formatter={(value, name) => [`${value} interactions`, name]} />
                 </PieChart>
               </ResponsiveContainer>
             </Paper>
@@ -279,26 +351,27 @@ const Analytics = () => {
           <Grid item xs={12} md={6}>
             <Paper elevation={2} sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
-                Booking Source
+                Request Categories
               </Typography>
               <Divider sx={{ mb: 2 }} />
               <ResponsiveContainer width="100%" height={300}>
                 <PieChart>
                   <Pie
-                    data={bookingSourceData}
+                    data={chartData.requestCategories}
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    label={({ category, percent }) => `${category}: ${(percent * 100).toFixed(0)}%`}
                     outerRadius={100}
                     fill="#8884d8"
-                    dataKey="value"
+                    dataKey="count"
+                    nameKey="category"
                   >
-                    {bookingSourceData.map((entry, index) => (
+                    {chartData.requestCategories.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
+                  <Tooltip formatter={(value, name) => [`${value} requests`, name]} />
                 </PieChart>
               </ResponsiveContainer>
             </Paper>
