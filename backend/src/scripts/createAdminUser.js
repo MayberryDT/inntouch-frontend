@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
 const path = require('path');
 const User = require('../models/User');
+const crypto = require('crypto');
+const readline = require('readline');
 
-// Load environment variables
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Get environment variables from the root .env file
+require('dotenv').config({ path: path.resolve(__dirname, '../../.env') });
+
+// Setup readline interface for user input
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI, {
@@ -20,28 +27,44 @@ mongoose.connect(process.env.MONGO_URI, {
     
     if (adminExists) {
       console.log('Admin user already exists');
+      rl.close();
       process.exit(0);
     }
     
-    // Create admin user
-    const admin = await User.create({
-      name: 'Admin User',
-      email: 'admin@inntouch.app',
-      password: 'admin123',
-      role: 'admin'
+    // Prompt for admin password or generate a secure one
+    rl.question('Enter admin password (leave empty to generate secure password): ', async (password) => {
+      let adminPassword;
+      
+      if (!password) {
+        // Generate a secure random password
+        adminPassword = crypto.randomBytes(12).toString('hex');
+        console.log(`Generated secure password: ${adminPassword}`);
+      } else {
+        adminPassword = password;
+      }
+      
+      // Create admin user
+      const admin = await User.create({
+        name: 'Admin User',
+        email: 'admin@inntouch.app',
+        password: adminPassword,
+        role: 'admin'
+      });
+      
+      console.log('Admin user created successfully');
+      console.log('Email: admin@inntouch.app');
+      
+      rl.close();
+      process.exit(0);
     });
-    
-    console.log('Admin user created successfully');
-    console.log('Email: admin@inntouch.app');
-    console.log('Password: admin123');
-    
-    process.exit(0);
   } catch (error) {
     console.error('Error creating admin user:', error);
+    rl.close();
     process.exit(1);
   }
 })
 .catch(err => {
   console.error('Error connecting to MongoDB:', err);
+  rl.close();
   process.exit(1);
 }); 

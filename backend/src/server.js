@@ -2,6 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const { errorHandler } = require('./middleware/errorHandler');
+const responseHandler = require('./middleware/responseHandler');
 
 // Load environment variables
 dotenv.config();
@@ -15,6 +17,7 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors());
+app.use(responseHandler); // Add standardized response formatting middleware
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -24,18 +27,22 @@ app.use('/api/guests', require('./routes/guests'));
 
 // Health check route
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ status: 'ok', message: 'InnTouch API is running' });
+  res.sendSuccess({ status: 'ok', time: new Date().toISOString() }, 'InnTouch API is running');
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    error: true,
-    message: 'Server Error',
-    details: process.env.NODE_ENV === 'development' ? err.message : {}
+// Default 404 route
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    error: {
+      code: 'ROUTE_NOT_FOUND',
+      message: `Route ${req.originalUrl} not found`
+    }
   });
 });
+
+// Centralized error handling middleware
+app.use(errorHandler);
 
 // Start server
 const PORT = process.env.PORT || 3000;
