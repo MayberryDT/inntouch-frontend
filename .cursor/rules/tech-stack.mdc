@@ -1,0 +1,37 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# InnTouch Tech Stack
+
+## Frontend
+- **Framework**: React (Progressive Web App)
+- **State Management**: React Context API or Redux
+- **API Communication**: Axios
+- **PWA Features**: Service workers for offline capabilities
+- **Responsive Design**: CSS Grid/Flexbox
+
+## Backend
+- **Framework**: Node.js with Express
+- **Authentication**: JWT-based with secure HTTP-only cookies
+- **Database Access**: Mongoose ODM for MongoDB
+
+## Data Storage
+- **Primary Database**: MongoDB Atlas (Cloud-hosted)
+
+## External Integrations
+- **Payment Processing**: Stripe API
+- **Property Management**: Cloudbeds API
+- **Communication**: Twilio API for SMS
+
+## Deployment
+- **Backend**: Heroku with auto-scaling
+- **Frontend**: Netlify with CDN
+- **Database**: MongoDB Atlas production cluster
+
+## Security
+- **Communication**: HTTPS
+- **Authentication**: JWT with short expiration
+- **Data Encryption**: At rest in MongoDB Atlas
+- **Monitoring**: Sentry for error tracking, New Relic for performance
